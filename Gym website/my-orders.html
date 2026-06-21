@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders — APEXFIT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="page-loader" id="pageLoader"><div class="loader-logo">APEX<span>FIT</span></div><div class="loader-bar"></div></div>
+
+<!-- Navbar -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner container">
+    <a href="index.html" class="nav-logo"><span class="logo-dot"></span><span class="logo-text">APEXFIT</span></a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="shop.html" class="nav-link">Shop</a></li>
+      <li><a href="track-order.html" class="nav-link">Track Order</a></li>
+      <li class="my-orders-link" style="display:none;"><a href="my-orders.html" class="nav-link active">My Orders</a></li>
+      <li class="admin-nav-link" style="display:none;"><a href="admin.html" class="nav-link">Admin</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="cart-btn" aria-label="Cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </a>
+      <button class="auth-google-btn" id="authBtn" onclick="signInWithGoogle()">
+        <svg width="15" height="15" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Sign In
+      </button>
+      <div class="user-menu-wrap" id="userMenu" style="display:none;">
+        <button class="user-menu-trigger">
+          <img class="user-avatar-img" src="" alt="">
+          <span class="user-display-name"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="user-dropdown-menu">
+          <a href="my-orders.html" class="dropdown-item">My Orders</a>
+          <a href="track-order.html" class="dropdown-item">Track Order</a>
+          <button class="dropdown-item sign-out-btn" onclick="signOutUser()">Sign Out</button>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="my-orders-page">
+  <div class="container" style="max-width:860px;">
+
+    <!-- Not signed in -->
+    <div id="myOrdersGuest" style="display:none;text-align:center;padding:5rem 2rem;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🔒</div>
+      <h2 style="font-family:var(--font-display);font-weight:900;font-size:1.75rem;letter-spacing:-.05em;margin-bottom:.75rem;">Sign In Required</h2>
+      <p style="color:var(--ink-3);margin-bottom:2rem;">Sign in with Google to view your order history.</p>
+      <button class="auth-google-btn" onclick="signInWithGoogle()" style="margin:0 auto;">
+        <svg width="15" height="15" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Sign In with Google
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="myOrdersLoading" style="display:none;text-align:center;padding:4rem;color:var(--ink-3);">Loading your orders…</div>
+
+    <!-- Orders content -->
+    <div id="myOrdersContent" style="display:none;">
+      <div style="margin-bottom:2rem;">
+        <h1 style="font-family:var(--font-display);font-weight:900;font-size:2rem;letter-spacing:-.06em;margin-bottom:.25rem;">My Orders</h1>
+        <p id="myOrdersSubline" style="color:var(--ink-3);font-size:.875rem;"></p>
+      </div>
+
+      <!-- Empty state -->
+      <div id="myOrdersEmpty" style="display:none;text-align:center;padding:4rem 2rem;background:var(--surface);border-radius:20px;border:1px solid var(--border);">
+        <div style="font-size:3rem;margin-bottom:1rem;">🛍️</div>
+        <h3 style="font-family:var(--font-display);font-weight:900;letter-spacing:-.04em;margin-bottom:.75rem;">No Orders Yet</h3>
+        <p style="color:var(--ink-3);margin-bottom:1.5rem;">When you place an order, it'll show up here.</p>
+        <a href="shop.html" class="btn btn-primary">Shop Now</a>
+      </div>
+
+      <!-- Table -->
+      <div id="myOrdersTable" class="my-orders-table-wrap"></div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Order detail side panel -->
+<div class="admin-modal-overlay" id="moPanel">
+  <div class="admin-modal">
+    <div class="admin-modal-header">
+      <div>
+        <div class="admin-modal-title" id="moPanelId">—</div>
+        <div style="font-size:.78rem;color:var(--ink-3);" id="moPanelDate">—</div>
+      </div>
+      <button class="admin-modal-close" onclick="closeMoPanel()">✕</button>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <span class="status-badge" id="moPanelStatus">Pending</span>
+    </div>
+
+    <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.875rem;">Timeline</div>
+    <div class="order-timeline" id="moPanelTimeline"></div>
+
+    <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:1.25rem 0 .75rem;">Items</div>
+    <div id="moPanelItems"></div>
+
+    <div style="border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:.82rem;color:var(--ink-3);" id="moPanelMeta"></div>
+      <div style="font-weight:900;font-family:var(--font-display);font-size:1.1rem;" id="moPanelTotal"></div>
+    </div>
+
+    <div style="margin-top:1.25rem;text-align:right;">
+      <a id="moPanelTrack" href="track-order.html" class="btn btn-outline btn-sm">Track Order →</a>
+    </div>
+  </div>
+</div>
+
+<footer style="background:var(--surface);border-top:1px solid var(--border);padding:1.5rem 0;margin-top:4rem;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 28px;text-align:center;font-size:.78rem;color:var(--ink-4);font-family:var(--font-body);">
+    © 2025 APEXFIT. All rights reserved.
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/orders.js"></script>
+<script src="js/main.js"></script>
+<script>
+/* ================================================================
+   MY ORDERS CONTROLLER
+   ================================================================ */
+var myOrdersList = [];
+
+window.__onAuthChange = function (user) {
+  var guestEl   = document.getElementById('myOrdersGuest');
+  var loadEl    = document.getElementById('myOrdersLoading');
+  var contentEl = document.getElementById('myOrdersContent');
+
+  if (!user) {
+    guestEl.style.display   = 'block';
+    loadEl.style.display    = 'none';
+    contentEl.style.display = 'none';
+    return;
+  }
+  guestEl.style.display   = 'none';
+  loadEl.style.display    = 'block';
+  contentEl.style.display = 'none';
+  loadMyOrders(user.email);
+};
+
+async function loadMyOrders(email) {
+  try {
+    var snap = await fbDb.collection('orders')
+      .where('customer_email', '==', email)
+      .orderBy('created_at', 'desc')
+      .get();
+
+    myOrdersList = snap.docs.map(function (d) { return Object.assign({ _docId: d.id }, d.data()); });
+
+    document.getElementById('myOrdersLoading').style.display = 'none';
+    document.getElementById('myOrdersContent').style.display = 'block';
+    document.getElementById('myOrdersSubline').textContent   =
+      myOrdersList.length + ' order' + (myOrdersList.length !== 1 ? 's' : '') + ' placed';
+
+    if (!myOrdersList.length) {
+      document.getElementById('myOrdersEmpty').style.display = 'block';
+      document.getElementById('myOrdersTable').style.display = 'none';
+      return;
+    }
+    document.getElementById('myOrdersEmpty').style.display = 'none';
+    renderMyOrders(myOrdersList);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('myOrdersLoading').style.display = 'none';
+    document.getElementById('myOrdersContent').style.display = 'block';
+    document.getElementById('myOrdersTable').innerHTML =
+      '<div style="text-align:center;color:var(--ink-3);padding:3rem;">Failed to load orders.</div>';
+  }
+}
+
+function renderMyOrders(orders) {
+  var wrap = document.getElementById('myOrdersTable');
+  wrap.innerHTML = '<table class="my-orders-table"><thead><tr>' +
+    '<th>Order ID</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th></th>' +
+    '</tr></thead><tbody>' +
+    orders.map(function (o, idx) {
+      return '<tr>' +
+        '<td><strong style="font-family:var(--font-display);font-size:.9rem;">' + (o.order_id||'—') + '</strong></td>' +
+        '<td style="font-size:.78rem;color:var(--ink-3);">' + (o.created_at ? fmtTs(o.created_at) : '—') + '</td>' +
+        '<td>' + (o.items||[]).length + '</td>' +
+        '<td><strong>' + fmtPHP(o.total_amount||0) + '</strong></td>' +
+        '<td><span class="status-badge status-' + (o.status||'Pending') + '">' + (o.status||'Pending') + '</span></td>' +
+        '<td><button class="btn btn-sm btn-outline" onclick="openMoPanel(' + idx + ')">Details</button></td>' +
+      '</tr>';
+    }).join('') +
+    '</tbody></table>';
+}
+
+window.openMoPanel = async function (idx) {
+  var o = myOrdersList[idx];
+  if (!o) return;
+
+  document.getElementById('moPanel').classList.add('open');
+  document.getElementById('moPanelId').textContent   = o.order_id || '—';
+  document.getElementById('moPanelDate').textContent = o.created_at ? fmtTs(o.created_at) : '—';
+  document.getElementById('moPanelTotal').textContent = fmtPHP(o.total_amount||0);
+  document.getElementById('moPanelMeta').textContent = 'Delivery: ' + (o.delivery_mode||'—');
+  document.getElementById('moPanelTrack').href = 'track-order.html?id=' + (o.order_id||'');
+
+  var statusBadge = document.getElementById('moPanelStatus');
+  statusBadge.textContent = o.status || 'Pending';
+  statusBadge.className = 'status-badge status-' + (o.status||'Pending');
+
+  // Load history
+  var ci = STATUS_ORDER.indexOf(o.status);
+  try {
+    var hSnap = await fbDb.collection('orders').doc(o._docId)
+      .collection('status_history').orderBy('created_at','asc').get();
+    var hist  = hSnap.docs.map(function (d) { return d.data(); });
+    document.getElementById('moPanelTimeline').innerHTML = STATUS_ORDER.map(function (s, i) {
+      var hEntry = hist.find(function (h) { return h.status === s; });
+      var isDone = i <= ci, isActive = i === ci;
+      return '<div class="tl-step ' + (isDone?'done':'') + ' ' + (isActive?'current':'') + '">' +
+        '<div class="tl-dot"></div>' +
+        '<div class="tl-content"><div class="tl-label">' + s + '</div>' +
+        '<div class="tl-ts">' + (hEntry && hEntry.created_at ? fmtTs(hEntry.created_at) : (isDone?'—':'Upcoming')) + '</div></div></div>';
+    }).join('');
+  } catch (e) {
+    document.getElementById('moPanelTimeline').innerHTML = '<div style="color:var(--ink-3);font-size:.82rem;">Timeline unavailable.</div>';
+  }
+
+  // Items
+  document.getElementById('moPanelItems').innerHTML = (o.items||[]).map(function (item) {
+    return '<div style="display:flex;justify-content:space-between;padding:.375rem 0;font-size:.82rem;border-bottom:1px solid var(--border);">' +
+      '<span>' + (item.product_name||'Item') + ' <span style="color:var(--ink-3);">× ' + (item.quantity||1) + '</span></span>' +
+      '<span style="font-weight:700;">' + fmtPHP((item.price||0)*(item.quantity||1)) + '</span></div>';
+  }).join('') || '<div style="color:var(--ink-3);font-size:.82rem;">No item details.</div>';
+};
+
+window.closeMoPanel = function () {
+  document.getElementById('moPanel').classList.remove('open');
+};
+
+document.addEventListener('click', function (e) {
+  if (e.target.id === 'moPanel') closeMoPanel();
+});
+</script>
+</body>
+</html>
