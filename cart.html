@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart — APEXFIT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="page-loader" id="pageLoader"><div class="loader-logo">APEX<span>FIT</span></div><div class="loader-bar"></div></div>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-dot"></span><span class="logo-text">APEXFIT</span></a>
+    <ul class="nav-menu">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="shop.html" class="nav-link">Shop</a></li>
+      <li><a href="track-order.html" class="nav-link">Track Order</a></li>
+      <li class="my-orders-link" style="display:none;"><a href="my-orders.html" class="nav-link">My Orders</a></li>
+      <li class="admin-nav-link" style="display:none;"><a href="admin.html" class="nav-link">Admin</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-btn" id="searchToggle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="auth-google-btn" id="authBtn" onclick="signInWithGoogle()"><svg width="15" height="15" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Sign In</button>
+      <div class="user-menu-wrap" id="userMenu" style="display:none;"><button class="user-menu-trigger"><img class="user-avatar-img" src="" alt=""><span class="user-display-name"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="user-dropdown-menu"><a href="my-orders.html" class="dropdown-item">My Orders</a><a href="track-order.html" class="dropdown-item">Track Order</a><button class="dropdown-item sign-out-btn" onclick="signOutUser()">Sign Out</button></div></div>
+      <button class="cart-pill" id="cartToggle"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cart-pill-badge" id="cartCount">0</span></button>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="search-bar" id="searchBar"><div class="search-container"><input type="text" id="searchInput" placeholder="Search products..."><button class="search-submit">Search</button></div></div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu"><button class="mobile-close" id="mobileClose"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+<ul class="mobile-nav-links"><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li></ul></div>
+<div class="overlay" id="overlay"></div>
+
+<!-- ===== CART PAGE ===== -->
+<main class="cart-page">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb" style="margin-bottom:1.5rem;">
+      <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <span>Shopping Cart</span>
+    </div>
+
+    <h1 class="cart-page-title">Shopping Cart</h1>
+
+    <div class="cart-page-grid">
+      <!-- Cart Items -->
+      <div>
+        <div id="cartPageItems"></div>
+
+        <!-- Continue Shopping -->
+        <div style="margin-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+          <a href="shop.html" class="btn btn-outline btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Continue Shopping
+          </a>
+          <button onclick="clearCartConfirm()" style="font-size:.8rem;color:var(--ink-4);transition:color .2s;" onmouseover="this.style.color='var(--error)'" onmouseout="this.style.color='var(--ink-4)'">
+            Clear Cart
+          </button>
+        </div>
+
+        <!-- Delivery info -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:.625rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <div>
+              <div style="font-size:.8rem;font-weight:700;">Free Shipping</div>
+              <div style="font-size:.72rem;color:var(--ink-3);">On orders over ₱75</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.625rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.25"/></svg>
+            <div>
+              <div style="font-size:.8rem;font-weight:700;">30-Day Returns</div>
+              <div style="font-size:.72rem;color:var(--ink-3);">Hassle-free guarantee</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.625rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div>
+              <div style="font-size:.8rem;font-weight:700;">Secure Checkout</div>
+              <div style="font-size:.72rem;color:var(--ink-3);">256-bit SSL encrypted</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span class="summary-label">Subtotal</span><span id="pageSummarySubtotal">₱0.00</span></div>
+        <div class="summary-row"><span class="summary-label">Shipping</span><span id="pageSummaryShipping">—</span></div>
+        <div class="summary-row"><span class="summary-label">Tax (est.)</span><span id="pageSummaryTax">—</span></div>
+        <div class="promo-form">
+          <input type="text" placeholder="Promo code" id="promoInput">
+          <button onclick="applyPromo()">Apply</button>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span id="pageSummaryTotal">₱0.00</span>
+        </div>
+        <a href="checkout.html" class="cart-checkout-btn" id="checkoutLink" style="display:flex;text-decoration:none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Proceed to Checkout
+        </a>
+        <div style="margin-top:1rem;display:flex;align-items:center;justify-content:center;gap:.5rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink-4)" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span style="font-size:.72rem;color:var(--ink-4);">Secure 256-bit SSL encrypted checkout</span>
+        </div>
+
+        <!-- Payment icons -->
+        <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
+          <div style="background:var(--elevated);border:1px solid var(--border);border-radius:4px;padding:.375rem .625rem;font-size:.65rem;color:var(--ink-3);font-weight:700;">VISA</div>
+          <div style="background:var(--elevated);border:1px solid var(--border);border-radius:4px;padding:.375rem .625rem;font-size:.65rem;color:var(--ink-3);font-weight:700;">MASTERCARD</div>
+          <div style="background:var(--elevated);border:1px solid var(--border);border-radius:4px;padding:.375rem .625rem;font-size:.65rem;color:var(--ink-3);font-weight:700;">AMEX</div>
+          <div style="background:var(--elevated);border:1px solid var(--border);border-radius:4px;padding:.375rem .625rem;font-size:.65rem;color:var(--ink-3);font-weight:700;">PAYPAL</div>
+          <div style="background:var(--elevated);border:1px solid var(--border);border-radius:4px;padding:.375rem .625rem;font-size:.65rem;color:var(--ink-3);font-weight:700;">APPLE PAY</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- You may also like -->
+    <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid var(--border);">
+      <div class="section-header" style="text-align:left;margin-bottom:2rem;">
+        <span class="section-tag">Don't Miss Out</span>
+        <h2 class="section-title" style="font-size:1.75rem;">You May Also Like</h2>
+      </div>
+      <div class="products-grid" id="suggestedGrid"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="footer-inner"><div class="footer-bottom"><div class="footer-copy">© 2025 APEXFIT. All rights reserved.</div><div class="footer-payments"><div class="payment-chip">VISA</div><div class="payment-chip">MC</div><div class="payment-chip">AMEX</div><div class="payment-chip">PAYPAL</div></div></div></div></footer>
+
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header"><div><div class="cart-title">Shopping Bag</div></div><button class="cart-close" id="cartClose">✕</button></div>
+  <div class="cart-empty" id="cartEmpty2" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" width="56" height="56"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><h3>Your bag is empty</h3></div>
+  <div class="cart-items" id="cartItemsList2"></div>
+  <div class="cart-footer" id="cartFooter2" style="display:none;"><div class="cart-total"><span>Total</span><span id="cartTotal2">₱0.00</span></div><a href="checkout.html" class="cart-checkout-btn">Checkout Securely</a></div>
+</div>
+<div class="modal-overlay" id="modalOverlay"><div class="product-modal" id="productModal"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<button class="back-to-top" id="backToTop"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></button>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Suggested products
+    const grid = document.getElementById('suggestedGrid');
+    if (grid) {
+      const suggested = PRODUCTS.slice(0, 4);
+      grid.innerHTML = suggested.map((p, i) => renderProductCard(p, i+1)).join('');
+      observeReveal();
+    }
+    // Tax estimate
+    const taxEl = document.getElementById('pageSummaryTax');
+    if (taxEl) {
+      const tax = getCartTotal() * 0.08;
+      taxEl.textContent = tax > 0 ? `₱${tax.toFixed(2)}` : '—';
+    }
+  });
+
+  window.clearCartConfirm = function() {
+    if (confirm('Are you sure you want to clear your cart?')) {
+      cart = [];
+      saveCart();
+      updateCartUI();
+      initCartPage();
+    }
+  };
+
+  window.applyPromo = function() {
+    const code = document.getElementById('promoInput')?.value?.toUpperCase();
+    const codes = { 'APEX10': 10, 'FIT20': 20, 'NEWUSER': 15 };
+    if (codes[code]) {
+      showToast(`Promo applied! ${codes[code]}% discount`, 'success');
+    } else {
+      showToast('Invalid promo code', 'error');
+    }
+  };
+</script>
+</body>
+</html>
