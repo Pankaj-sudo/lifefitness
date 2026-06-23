@@ -60,6 +60,26 @@
       </div>
     </div>
 
+    <!-- Stats Cards -->
+    <div class="admin-stats-row">
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Total Orders</div>
+        <div class="admin-stat-val" id="statTotal">—</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Pending</div>
+        <div class="admin-stat-val" id="statPending">—</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Total Revenue</div>
+        <div class="admin-stat-val" id="statRevenue">—</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Today's Orders</div>
+        <div class="admin-stat-val" id="statToday">—</div>
+      </div>
+    </div>
+
     <!-- Filters -->
     <div class="admin-filters">
       <input class="admin-search" type="text" id="adminSearch" placeholder="Search by Order ID or name…" oninput="filterOrders()">
@@ -172,8 +192,8 @@ var allOrders = [];
 var ordersUnsubscribe = null;
 var currentDocId = null;
 
-/* ---------- Auth gate ---------- */
-window.__onAuthChange = function (user) {
+/* ---------- Auth gate (checks custom claim { admin: true }) ---------- */
+window.__onAuthChange = async function (user) {
   var gate = document.getElementById('accessGate');
   var wrap = document.getElementById('adminWrap');
   var pill = document.getElementById('adminUserPill');
@@ -190,11 +210,15 @@ window.__onAuthChange = function (user) {
     return;
   }
 
-  if (user.email !== ADMIN_EMAIL) {
+  /* Force-refresh token to get latest custom claims */
+  var tokenResult = await user.getIdTokenResult(true);
+  var isAdmin = !!(tokenResult.claims && tokenResult.claims.admin);
+
+  if (!isAdmin) {
     gate.innerHTML = '<div style="text-align:center;max-width:340px;padding:2rem;">' +
       '<div style="font-size:3rem;margin-bottom:1rem;">🚫</div>' +
       '<h2 style="font-family:var(--font-display);font-weight:900;letter-spacing:-.04em;margin-bottom:.75rem;">Access Denied</h2>' +
-      '<p style="color:var(--ink-3);margin-bottom:1.5rem;">' + user.email + ' is not an admin.</p>' +
+      '<p style="color:var(--ink-3);margin-bottom:1.5rem;">' + user.email + ' does not have admin privileges.</p>' +
       '<button class="btn btn-outline" onclick="signOutUser()">Sign Out</button></div>';
     gate.style.display = 'flex';
     wrap.style.display = 'none';
@@ -215,11 +239,32 @@ function initAdminDashboard() {
     .onSnapshot(function (snap) {
       allOrders = snap.docs.map(function (d) { return Object.assign({ _docId: d.id }, d.data()); });
       document.getElementById('orderCount').textContent = allOrders.length + ' order' + (allOrders.length !== 1 ? 's' : '');
+      updateStats();
       filterOrders();
     }, function (err) {
       console.error(err);
       showToast('Failed to load orders.', 'error');
     });
+}
+
+function updateStats() {
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  var pending = 0, revenue = 0, todayCount = 0;
+  allOrders.forEach(function (o) {
+    if (o.status === 'Pending') pending++;
+    if (o.status === 'Delivered' || o.status === 'Confirmed' || o.status === 'Shipped') {
+      revenue += (o.total_amount || 0);
+    }
+    if (o.created_at) {
+      var d = o.created_at.toDate ? o.created_at.toDate() : new Date(o.created_at);
+      if (d >= today) todayCount++;
+    }
+  });
+  document.getElementById('statTotal').textContent   = allOrders.length;
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statRevenue').textContent = fmtPHP(revenue);
+  document.getElementById('statToday').textContent   = todayCount;
 }
 
 function refreshOrders() {
